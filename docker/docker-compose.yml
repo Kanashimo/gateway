@@ -1,0 +1,8 @@
+services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    ports:
+      - 4000:4000
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
