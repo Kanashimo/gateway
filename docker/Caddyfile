@@ -1,6 +1,7 @@
 :4000 {
 	forward_auth host.docker.internal:3000 {
-		uri /api/test
+		uri /api/check
+		copy_headers Cookies
 	}
 	respond "Hello world, you are authenticated!"
 }
