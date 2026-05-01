@@ -1,17 +1,17 @@
 import { startAuthentication } from "@simplewebauthn/browser"
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router"
+import { useNavigate, Link } from "react-router"
 
 export default function Login() {
     const [error, setError] = useState<string | null>(null)
     const navigate = useNavigate()
 
     useEffect(() => {
-        fetch("/api/setup")
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) navigate("/setup")
-            })
+        // fetch("/api/setup")
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         if (data.success) navigate("/setup")
+        //     })
 
         fetch("/api/session", {
             credentials: "include"
@@ -64,6 +64,7 @@ export default function Login() {
                 {error}
             </div>}
             <button className="button" onClick={loginWithPasskey}>login with passkey</button>
+            <div>Don't have account? <Link to="/setup">Create one.</Link></div>
         </div>
     )
 }

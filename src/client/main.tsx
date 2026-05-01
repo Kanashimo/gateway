@@ -1,6 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
-import { BrowserRouter, Routes, Route } from "react-router"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router"
 
 import Setup from "./app/Setup"
 import Login from "./app/Login"
@@ -14,7 +14,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <Routes>
         <Route path="setup" element={<Setup />} />
         <Route path="login" element={<Login />} />
-        <Route path="*" element={<NYI />} />
+        <Route path="settings" element={<NYI />} />
+        <Route path="*" element={<Navigate to="login" />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -4,7 +4,7 @@ export default function NYI() {
             <div className="NYI-head">
                 <h1>𓆝 𓆟 𓆞 𓆝 𓆟</h1>
             </div>
-            <div className="NYI-body">Not Yet Implemented (sorry bro)</div>
+            <div className="NYI-body">Settings Not Yet Implemented (sorry bro)</div>
         </div>
     )
 }
