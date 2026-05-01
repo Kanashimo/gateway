@@ -6,9 +6,10 @@ import schema from "@/middlewares/schema"
 
 const setup = Router()
 
-setup.get("/", async (_, res) => {
+setup.get("/", async (req, res) => {
     const user = await prisma.user.findMany()
-    if (user.length) return res.json({
+    const key = await prisma.key.findMany()
+    if (user.length && key.length) return res.json({
         success: false,
         response: false
     } satisfies Response<boolean>)

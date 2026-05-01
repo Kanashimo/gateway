@@ -1,7 +1,10 @@
 :4000 {
-	forward_auth host.docker.internal:3000 {
-		uri /api/check
-		copy_headers Cookies
+	route {
+		forward_auth host.docker.internal:3000 {
+			uri /api/check
+			copy_headers Cookies
+		}
+
+		respond "Hello world, you are authenticated!"
 	}
-	respond "Hello world, you are authenticated!"
 }

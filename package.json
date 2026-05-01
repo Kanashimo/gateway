@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon -w src/server -w .env -x tsx src/server/main.ts",
     "start": "NODE_ENV=production tsx src/server/main.ts",
-    "build": "vite build"
+    "build": "vite build",
+    "migrate-prod": "NODE_ENV=production prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.8.0",
@@ -19,6 +20,7 @@
     "morgan": "^1.10.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-router": "^7.14.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
     "vite-express": "*",

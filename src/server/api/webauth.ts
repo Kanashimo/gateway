@@ -1,4 +1,4 @@
-import { Router, Request as Req } from "express"
+import { Router, Request as Req, response } from "express"
 import { generateAuthenticationOptions, generateRegistrationOptions, verifyAuthenticationResponse, verifyRegistrationResponse, } from "@simplewebauthn/server"
 import schema from "@/middlewares/schema"
 import { z } from "zod"
@@ -16,7 +16,7 @@ webauthn.post("/register/options", auth, schema({
 }), async (req: Req<any>, res) => {
     const options = await generateRegistrationOptions({
         rpName: "gateway",
-        rpID: config.domain.split("://")[1],
+        rpID: config.domain.split("://")[1].split(":")[0],
         userID: req.session?.id,
         userName: req.session?.username,
         attestationType: "none",
@@ -37,14 +37,14 @@ webauthn.post("/register/options", auth, schema({
 
 webauthn.post("/register/verify", schema({
     body: {
-        response: z.object()
+        response: z.any()
     }
 }), auth, async (req: Req<any>, res) => {
     const verification = await verifyRegistrationResponse({
         response: req.body.response,
         expectedChallenge: req.session?.challenge,
         expectedOrigin: config.domain,
-        expectedRPID: config.domain.split("://")[1]
+        expectedRPID: config.domain.split("://")[1].split(":")[0]
     })
 
     if (!verification.verified) return res.status(400).json({
@@ -54,26 +54,34 @@ webauthn.post("/register/verify", schema({
 
     const { id, publicKey, counter } = verification.registrationInfo.credential
 
-    await prisma.key.create({
+    const key = await prisma.key.create({
         data: {
             userId: req.session?.id,
             name: req.session?.name,
             id: Buffer.from(id).toString("base64url"),
             publicKey: Buffer.from(publicKey).toString("base64url"),
             counter
+        },
+        include: {
+            user: true
         }
     })
 
+    req.session!.id = key.user.id
+    req.session!.username = key.user.username
+
     res.json({
         success: true,
-        response: "ok"
-    })
+        response: req.session?.redirect_to ?? config.domain + "/settings"
+    } satisfies Response)
+
+    req.session!.redirect_to = undefined
 })
 
-webauthn.get("/login/options", async (req, res) => {
+webauthn.post("/login/options", async (req, res) => {
     const options = await generateAuthenticationOptions({
         userVerification: "required",
-        rpID: config.domain.split("://")[1]
+        rpID: config.domain.split("://")[1].split(":")[0]
     })
 
     req.session!.challenge = options.challenge
@@ -84,14 +92,14 @@ webauthn.get("/login/options", async (req, res) => {
     } satisfies Response<typeof options>)
 })
 
-webauthn.get("/login/verify", schema({
+webauthn.post("/login/verify", schema({
     body: {
-        id: z.string()
+        response: z.any()
     }
 }), async (req: Req<any>, res) => {
     const key = await prisma.key.findUnique({
         where: {
-            id: req.body.id
+            id: Buffer.from(req.body.response.id).toString("base64url")
         },
         include: {
             user: true
@@ -104,10 +112,10 @@ webauthn.get("/login/verify", schema({
     } satisfies Response)
 
     const verification = await verifyAuthenticationResponse({
-        response: req.body,
+        response: req.body.response,
         expectedChallenge: req.session?.challenge,
         expectedOrigin: config.domain,
-        expectedRPID: config.domain.split("://")[1],
+        expectedRPID: config.domain.split("://")[1].split(":")[0],
         credential: {
             id: key.id,
             publicKey: Buffer.from(key.publicKey, "base64url"),
@@ -136,8 +144,12 @@ webauthn.get("/login/verify", schema({
 
     res.json({
         success: true,
-        response: "ok"
+        response: req.session?.redirect_to ?? config.domain + "/settings"
     } satisfies Response)
+
+    if (req.session) {
+        req.session.redirect_to = undefined
+    }
 })
 
 export default webauthn
