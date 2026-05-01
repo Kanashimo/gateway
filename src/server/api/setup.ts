@@ -24,12 +24,12 @@ setup.post("/register", schema({
         username: z.string()
     }
 }), async (req: Req<any>, res) => {
-    // const user = await prisma.user.findMany()
+    const user = await prisma.user.findMany()
 
-    // if (user.length) return res.json({
-    //     success: false,
-    //     response: "Setup has been finished"
-    // } satisfies Response)
+    if (user.length) return res.json({
+        success: false,
+        response: "Setup has been finished"
+    } satisfies Response)
 
     try {
         const user = await prisma.user.create({

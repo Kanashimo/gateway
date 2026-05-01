@@ -10,13 +10,13 @@ export default function Setup() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        // fetch("/api/setup", {
-        //     credentials: "include"
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         if (!data.success) return navigate("/settings")
-        //     })
+        fetch("/api/setup", {
+            credentials: "include"
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) return navigate("/settings")
+            })
 
         fetch("/api/session", {
             credentials: "include"

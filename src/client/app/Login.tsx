@@ -7,11 +7,11 @@ export default function Login() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        // fetch("/api/setup")
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         if (data.success) navigate("/setup")
-        //     })
+        fetch("/api/setup")
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) navigate("/setup")
+            })
 
         fetch("/api/session", {
             credentials: "include"
