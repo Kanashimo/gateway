@@ -3,6 +3,7 @@ import ViteExpress from "vite-express"
 import morgan from "morgan"
 import cookieSession from "cookie-session"
 import crypto from "crypto"
+import { parse } from "tldts";
 
 import router from "@/router"
 import jsonError from "@/middlewares/json"
@@ -25,6 +26,9 @@ app.use(cookieSession({
   name: "session",
   keys: [process.env.NODE_ENV == "production" ? crypto.randomBytes(32).toString("hex") : "dev_cookie_key"],
   maxAge: config.session_duration * 60 * 1000,
+  sameSite: "none",
+  secure: config.domain.split("://")[0] == "https" || config.domain.split("://")[0] == "wss" ? true : false,
+  domain: parse(new URL(config.domain).hostname).domain || undefined
 }))
 
 app.use("/api", router)
