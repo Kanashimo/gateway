@@ -12,6 +12,8 @@ That's my last project for Flavortown, shipped just right before the end. I want
 
 For now basic setup and WebAuthn authentication is implemented
 
+If you want to register, go to `/setup` and to login use `/login`
+
 ## Running
 The recommended way of running **gateway** is via **Docker container**
 ```yml
