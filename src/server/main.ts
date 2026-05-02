@@ -28,7 +28,8 @@ app.use(cookieSession({
   name: "session",
   keys: [process.env.NODE_ENV == "production" ? crypto.randomBytes(32).toString("hex") : "dev_cookie_key"],
   maxAge: config.session_duration * 60 * 1000,
-  sameSite: "lax"
+  sameSite: "lax",
+  domain: "*" + config.domain_cookie
 }))
 
 app.use("/api", router)

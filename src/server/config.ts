@@ -12,6 +12,7 @@ const AppConfigSchema = z.object({
     listen_port: z.coerce.number().int().min(1).max(65535).default(3000),
     session_duration: z.coerce.number().int().min(1).default(60),
     domain: z.string().default("http://localhost:" + (process.env.LISTEN_PORT || 3000)),
+    domain_cookie: z.string().default("localhost")
 });
 
 type AppConfig = z.infer<typeof AppConfigSchema>;
