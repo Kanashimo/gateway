@@ -46,11 +46,12 @@ gateway.example.com {
 ```
 
 ## Configuration
-| Variable               | Default                   | Description                                  |
-|------------------------|---------------------------|----------------------------------------------|
-| `LISTEN_PORT`          | `3000`                    | Server's listen port                         |
-| `SESSION_DURATION`     | `60`                      | Session duration in minutes.                 |
-| `DOMAIN`               | `http://localhost:3000`   | Domain on which application is served on     |
+| Variable               | Default                   | Description                                                               |
+|------------------------|---------------------------|---------------------------------------------------------------------------|
+| `LISTEN_PORT`          | `3000`                    | Server's listen port                                                      |
+| `SESSION_DURATION`     | `60`                      | Session duration in minutes.                                              |
+| `DOMAIN`               | `http://localhost:3000`   | Domain on which application is served on                                  |
+| `DOMAIN_COOKIE`        | `localhost`               | Domain on which application is served on, but without protocol, port etc. |
 
 ## License
 Released under the MIT license.
