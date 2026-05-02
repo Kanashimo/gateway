@@ -28,7 +28,7 @@ app.use(cookieSession({
   maxAge: config.session_duration * 60 * 1000,
   sameSite: "none",
   secure: config.domain.split("://")[0] == "https" || config.domain.split("://")[0] == "wss" ? true : false,
-  domain: parse(new URL(config.domain).hostname).domain || undefined
+  domain: parse(config.domain).domain || parse(config.domain).hostname || undefined
 }))
 
 app.use("/api", router)
