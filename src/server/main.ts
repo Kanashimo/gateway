@@ -15,6 +15,8 @@ app.use(express.json())
 app.use(jsonError)
 app.use(express.static("public"))
 
+app.set("trust proxy", 1);
+
 app.use((req, res, next) => {
   if (req.path.startsWith("/api")) {
     return morgan("tiny")(req, res, next)
@@ -26,8 +28,7 @@ app.use(cookieSession({
   name: "session",
   keys: [process.env.NODE_ENV == "production" ? crypto.randomBytes(32).toString("hex") : "dev_cookie_key"],
   maxAge: config.session_duration * 60 * 1000,
-  secure: config.domain.split("://")[0] == "https" || config.domain.split("://")[0] == "wss" ? true : false,
-  domain: config.domain_cookie
+  sameSite: "lax"
 }))
 
 app.use("/api", router)
