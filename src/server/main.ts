@@ -26,9 +26,8 @@ app.use(cookieSession({
   name: "session",
   keys: [process.env.NODE_ENV == "production" ? crypto.randomBytes(32).toString("hex") : "dev_cookie_key"],
   maxAge: config.session_duration * 60 * 1000,
-  sameSite: "none",
   secure: config.domain.split("://")[0] == "https" || config.domain.split("://")[0] == "wss" ? true : false,
-  domain: parse(config.domain).domain || parse(config.domain).hostname || undefined
+  domain: config.domain_cookie
 }))
 
 app.use("/api", router)

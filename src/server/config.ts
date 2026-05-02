@@ -11,7 +11,8 @@ const booleanFromString = z.preprocess((value) => {
 const AppConfigSchema = z.object({
     listen_port: z.coerce.number().int().min(1).max(65535).default(3000),
     session_duration: z.coerce.number().int().min(1).default(60),
-    domain: z.string().default("http://localhost:" + (process.env.LISTEN_PORT || 3000))
+    domain: z.string().default("http://localhost:" + (process.env.LISTEN_PORT || 3000)),
+    domain_cookie: z.string().default("localhost")
 });
 
 type AppConfig = z.infer<typeof AppConfigSchema>;
@@ -19,7 +20,8 @@ type AppConfig = z.infer<typeof AppConfigSchema>;
 const result = AppConfigSchema.safeParse({
     listen_port: process.env.LISTEN_PORT,
     session_duration: process.env.SESSION_DURATION,
-    domain: process.env.DOMAIN
+    domain: process.env.DOMAIN,
+    domain_cookie: process.env.DOMAIN_COOKIE
 })
 
 if (!result.success) {
